@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import BingoBoard from './components/BingoBoard.vue'
 import WinnerTable from './components/WinnerTable.vue'
 
@@ -14,8 +14,8 @@ export default {
   name: 'app',
   components: {
     BingoBoard,
-    WinnerTable
-  }
+    WinnerTable,
+  },
 }
 </script>
 
@@ -45,13 +45,18 @@ body {
   text-align: center;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--ffcond);
 }
 
 .reset-button {
   margin-top: 2rem;
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
 
   border: 0;
   background: hsla(0, 0%, 40%, 1);
