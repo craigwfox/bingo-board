@@ -6,17 +6,9 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import BingoBoard from './components/BingoBoard.vue'
 import WinnerTable from './components/WinnerTable.vue'
-
-export default {
-  name: 'app',
-  components: {
-    BingoBoard,
-    WinnerTable,
-  },
-}
 </script>
 
 <style>

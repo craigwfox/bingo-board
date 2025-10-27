@@ -2,15 +2,15 @@
   <div class="winners-wrapper">
     <h2>Winners</h2>
 
-    <form class="player-form">
+    <form class="player-form" @submit.prevent="addPlayer">
       <div class="input">
-        <label for="playername">Player name</label>
-        <input type="text" id="playername" />
+        <label for="playerName">Player name</label>
+        <input type="text" id="playerName" v-model="playerName" />
       </div>
-      <button v-on:click="addPlayer">submit</button>
+      <button @click.prevent="addPlayer" type="button">submit</button>
     </form>
 
-    <table v-if="Object.keys(winnersarry).length > 0">
+    <table v-if="winners && Object.keys(winners).length > 0">
       <thead>
         <tr>
           <th>Player</th>
@@ -20,11 +20,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="person in winnersarry" v-bind:key="person.name">
+        <tr v-for="person in winners" v-bind:key="person.name">
           <td>{{ person.name }}</td>
           <td>{{ person.wins }}</td>
           <td>
-            <button class="winner-edit" :data-playerid="person.id" v-on:click="addWin">
+            <button class="winner-edit" type="button" @click.prevent="addWin(person.id)">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -40,7 +40,7 @@
             </button>
           </td>
           <td>
-            <button class="winner-edit" :data-playerid="person.id" v-on:click="removeWin">
+            <button class="winner-edit" type="button" @click.prevent="removeWin(person.id)">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -58,82 +58,102 @@
       </tbody>
     </table>
     <button
-      v-if="Object.keys(winnersarry).length > 0"
+      v-if="Object.keys(winners).length > 0"
       class="reset-button"
-      v-on:click="clearPlayers"
+      type="button"
+      @click.prevent="clearPlayers"
     >
       Clear players
     </button>
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'WinnerTable',
-  data() {
-    return {
-      winnersarry: {},
-    }
-  },
-  mounted() {
-    if (window.localStorage.getItem('cachedwinners')) {
-      this.winnersarry = JSON.parse(window.localStorage.getItem('cachedwinners'))
-    }
-  },
-  methods: {
-    addPlayer: function (e) {
-      e.preventDefault()
-      const playerinput = document.getElementById('playername'),
-        playername = playerinput.value,
-        playerid = playername.replace(/\s/g, '-').toLowerCase()
+<script lang="ts" setup>
+// ====---------------====
+// 🚀 Imports
+// ====---------------====
+import { onMounted, ref } from 'vue'
 
-      if (playername.length > 0) {
-        if (this.winnersarry[playerid]) {
-          this.winnersarry[playerid].wins = this.winnersarry[playerid].wins + 1
-        } else {
-          Vue.set(this.winnersarry, playerid, {
-            id: playerid,
-            name: playername,
-            wins: 1,
-          })
-        }
-
-        playerinput.value = ''
-        window.localStorage.setItem('cachedwinners', JSON.stringify(this.winnersarry))
-      }
-    },
-    addWin: function (e) {
-      e.preventDefault()
-      const el = e.target,
-        elId = el.getAttribute('data-playerid')
-
-      this.winnersarry[elId].wins = this.winnersarry[elId].wins + 1
-      window.localStorage.setItem('cachedwinners', JSON.stringify(this.winnersarry))
-    },
-    removeWin: function (e) {
-      e.preventDefault()
-      const el = e.target,
-        elId = el.getAttribute('data-playerid')
-
-      this.winnersarry[elId].wins = this.winnersarry[elId].wins - 1
-      if (this.winnersarry[elId].wins === 0) {
-        delete this.winnersarry[elId]
-      }
-      window.localStorage.setItem('cachedwinners', JSON.stringify(this.winnersarry))
-    },
-    clearPlayers: function (e) {
-      e.preventDefault()
-
-      if (window.confirm('You are about to reset the player table. To proceed press ok')) {
-        this.winnersarry = {}
-        window.localStorage.removeItem('cachedwinners')
-      }
-    },
-  },
+// ====---------------====
+// 💾 Types & Interfaces
+// ====---------------====
+interface Player {
+  id: string
+  name: string
+  wins: number
 }
+
+interface Winners {
+  [key: string]: Player
+}
+
+// ====---------------====
+// 🗄️ Props / Emits
+// ====---------------====
+
+// ====---------------====
+// 🏪 Stores
+// ====---------------====
+
+// ====---------------====
+// 💡 Data
+// ====---------------====
+const playerName = ref('')
+const winners = ref<Winners>({})
+
+// ====---------------====
+// 🛠 Methods
+// ====---------------====
+function addPlayer(e) {
+  e.preventDefault()
+  const playerIid = playerName.value.replace(/\s/g, '-').toLowerCase()
+
+  if (winners.value?.[playerIid]) {
+    winners.value[playerIid].wins += 1
+  } else {
+    winners.value[playerIid] = {
+      id: playerIid,
+      name: playerName.value,
+      wins: 1,
+    }
+
+    playerName.value = ''
+    cacheWinners()
+  }
+}
+
+function addWin(id: string) {
+  if (winners.value[id]) winners.value[id].wins += 1
+  cacheWinners()
+}
+
+function removeWin(id: string) {
+  if (winners.value[id]) {
+    winners.value[id].wins -= 1
+    if (winners.value[id].wins < 1) delete winners.value[id]
+  }
+  cacheWinners()
+}
+
+function clearPlayers() {
+  winners.value = {}
+  window.localStorage.removeItem('cachedwinners')
+}
+
+function cacheWinners() {
+  window.localStorage.setItem('cachedwinners', JSON.stringify(winners.value))
+}
+
+// ====---------------====
+// 🌄 Lifecycle
+// ====---------------====
+onMounted(() => {
+  if (window.localStorage.getItem('cachedwinners'))
+    winners.value = JSON.parse(window.localStorage.getItem('cachedwinners') ?? '')
+})
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .winners-wrapper {
   display: flex;
   flex-direction: column;

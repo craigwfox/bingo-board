@@ -4,7 +4,7 @@
       <tbody>
         <tr>
           <th scope="row">B</th>
-          <td v-for="col in rowrange(1, 15)" :key="col">
+          <td v-for="col in rowRange(1, 15)" :key="col">
             <button class="col-button" :id="'b' + col" :data-row="'rowb'" v-on:click="highlightCol">
               {{ col }}
             </button>
@@ -12,7 +12,7 @@
         </tr>
         <tr>
           <th scope="row">I</th>
-          <td v-for="col in rowrange(16, 30)" :key="col">
+          <td v-for="col in rowRange(16, 30)" :key="col">
             <button class="col-button" :id="'i' + col" :data-row="'rowi'" v-on:click="highlightCol">
               {{ col }}
             </button>
@@ -20,7 +20,7 @@
         </tr>
         <tr>
           <th scope="row">N</th>
-          <td v-for="col in rowrange(31, 45)" :key="col">
+          <td v-for="col in rowRange(31, 45)" :key="col">
             <button class="col-button" :id="'n' + col" :data-row="'rown'" v-on:click="highlightCol">
               {{ col }}
             </button>
@@ -28,7 +28,7 @@
         </tr>
         <tr>
           <th scope="row">G</th>
-          <td v-for="col in rowrange(46, 60)" :key="col">
+          <td v-for="col in rowRange(46, 60)" :key="col">
             <button class="col-button" :id="'g' + col" :data-row="'rowg'" v-on:click="highlightCol">
               {{ col }}
             </button>
@@ -36,7 +36,7 @@
         </tr>
         <tr>
           <th scope="row">O</th>
-          <td v-for="col in rowrange(61, 75)" :key="col">
+          <td v-for="col in rowRange(61, 75)" :key="col">
             <button class="col-button" :id="'o' + col" :data-row="'rowo'" v-on:click="highlightCol">
               {{ col }}
             </button>
@@ -48,62 +48,93 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'BingoBoard',
-  data() {
-    return {
-      index: 0,
-      currentNumbers: {
-        rowb: [],
-        rowi: [],
-        rown: [],
-        rowg: [],
-        rowo: [],
-      },
-    }
-  },
-  methods: {
-    rowrange: (rangestart, rangestop) => {
-      const rangearry = []
-      for (let i = rangestart; i <= rangestop; i++) {
-        rangearry.push(i)
-      }
-      return rangearry
-    },
-    highlightCol: function (e) {
-      const el = e.target,
-        currow = el.getAttribute('data-row'),
-        elId = el.getAttribute('id')
+<script lang="ts" setup>
+// ====---------------====
+// 🚀 Imports
+// ====---------------====
+import { ref } from 'vue'
 
-      if (el.classList.contains('active')) {
-        const arrypos = this.currentNumbers[currow].indexOf(elId)
-
-        el.classList.remove('active')
-        this.currentNumbers[currow].splice(arrypos, 1)
-      } else {
-        el.classList.add('active')
-        this.currentNumbers[currow].push(elId)
-      }
-    },
-    gameReset: function () {
-      const activeButtons = document.querySelectorAll('table td button.active')
-
-      this.currentNumbers.rowb = []
-      this.currentNumbers.rowi = []
-      this.currentNumbers.rown = []
-      this.currentNumbers.rowg = []
-      this.currentNumbers.rowo = []
-
-      activeButtons.forEach((element) => {
-        element.classList.remove('active')
-      })
-    },
-  },
+// ====---------------====
+// 💾 Types & Interfaces
+// ====---------------====
+interface CurrentNumbers {
+  [key: string]: string[]
 }
+
+// ====---------------====
+// 🗄️ Props / Emits
+// ====---------------====
+
+// ====---------------====
+// 🏪 Stores
+// ====---------------====
+
+// ====---------------====
+// 💡 Data
+// ====---------------====
+const index = ref(0)
+const currentNumbers = ref<CurrentNumbers>({
+  rowb: [],
+  rowi: [],
+  rown: [],
+  rowg: [],
+  rowo: [],
+})
+
+// ====---------------====
+// 🛠 Methods
+// ====---------------====
+
+function rowRange(rangeStart: number, rangeStop: number) {
+  const rangeArry = []
+  for (let i = rangeStart; i <= rangeStop; i++) {
+    rangeArry.push(i)
+  }
+  return rangeArry
+}
+
+function highlightCol(e: Event) {
+  const el = e.target as HTMLLIElement
+
+  if (!el) return
+
+  const x = el.getAttribute('data-row')
+  const elId = el.getAttribute('id')
+
+  if (!x || !elId) return
+
+  if (el.classList.contains('active')) {
+    const position: number | null = currentNumbers.value[x]?.indexOf(elId) ?? null
+    if (!position) return
+
+    el.classList.remove('active')
+    currentNumbers.value[x]?.splice(position, 1)
+  } else {
+    el.classList.add('active')
+    currentNumbers.value[x]?.push(elId)
+  }
+}
+
+function gameReset() {
+  const activeButtons = document.querySelectorAll('table td button.active')
+
+  currentNumbers.value.rowb?.splice(0)
+  currentNumbers.value.rowi?.splice(0)
+  currentNumbers.value.rown?.splice(0)
+  currentNumbers.value.rowg?.splice(0)
+  currentNumbers.value.rowo?.splice(0)
+
+  activeButtons.forEach((element) => {
+    element.classList.remove('active')
+  })
+}
+
+// ====---------------====
+// 🌄 Lifecycle
+// ====---------------====
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 table {
   --colsize: 5vw;
 
