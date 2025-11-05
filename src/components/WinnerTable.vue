@@ -195,7 +195,7 @@ onMounted(() => {
   font-size: 1.8rem;
   line-height: 1;
 
-  cursor: url('./yodel-trey-head.png'), auto;
+  cursor: url('/yodel-trey-head.png'), auto;
 }
 
 .player-form button {
@@ -209,7 +209,7 @@ onMounted(() => {
   color: #fff;
   font-size: 1.8rem;
   line-height: 1;
-  cursor: url('./trey-beard.png'), auto;
+  cursor: url('/trey-beard.png'), auto;
 }
 
 .player-form button:hover,
@@ -268,14 +268,14 @@ tbody td:nth-last-child(-n + 2) {
   background: none;
   border: 0;
 
-  cursor: url('./trey-beard.png'), auto;
+  cursor: url('/trey-beard.png'), auto;
 
   &--add {
-    cursor: url('./tregg-icon.png'), auto;
+    cursor: url('/tregg-icon.png'), auto;
   }
 
   &--remove {
-    cursor: url('./treyofdisapproval.png'), auto;
+    cursor: url('/treyofdisapproval.png'), auto;
   }
 }
 
@@ -289,6 +289,6 @@ tbody td:nth-last-child(-n + 2) {
 }
 
 .reset-button {
-  cursor: url('./treyofdisapproval-bw.png'), auto;
+  cursor: url('/treyofdisapproval-bw.png'), auto;
 }
 </style>
