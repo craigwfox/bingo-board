@@ -24,7 +24,11 @@
           <td>{{ person.name }}</td>
           <td>{{ person.wins }}</td>
           <td>
-            <button class="winner-edit" type="button" @click.prevent="addWin(person.id)">
+            <button
+              class="winner-edit winner-edit--add"
+              type="button"
+              @click.prevent="addWin(person.id)"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -40,7 +44,11 @@
             </button>
           </td>
           <td>
-            <button class="winner-edit" type="button" @click.prevent="removeWin(person.id)">
+            <button
+              class="winner-edit winner-edit--remove"
+              type="button"
+              @click.prevent="removeWin(person.id)"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -186,6 +194,8 @@ onMounted(() => {
 
   font-size: 1.8rem;
   line-height: 1;
+
+  cursor: url('./yodel-trey-head.png'), auto;
 }
 
 .player-form button {
@@ -199,7 +209,7 @@ onMounted(() => {
   color: #fff;
   font-size: 1.8rem;
   line-height: 1;
-  cursor: pointer;
+  cursor: url('./trey-beard.png'), auto;
 }
 
 .player-form button:hover,
@@ -258,7 +268,15 @@ tbody td:nth-last-child(-n + 2) {
   background: none;
   border: 0;
 
-  cursor: pointer;
+  cursor: url('./trey-beard.png'), auto;
+
+  &--add {
+    cursor: url('./tregg-icon.png'), auto;
+  }
+
+  &--remove {
+    cursor: url('./treyofdisapproval.png'), auto;
+  }
 }
 
 .winner-edit svg {
@@ -268,5 +286,9 @@ tbody td:nth-last-child(-n + 2) {
   font-size: 0.5rem;
 
   pointer-events: none;
+}
+
+.reset-button {
+  cursor: url('./treyofdisapproval-bw.png'), auto;
 }
 </style>

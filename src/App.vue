@@ -16,6 +16,7 @@ import WinnerTable from './components/WinnerTable.vue'
   --ffcond: 'Oswald', sans-serif;
   --ffbase: 'Roboto', sans-serif;
 }
+
 html {
   margin: 0;
 

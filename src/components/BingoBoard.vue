@@ -180,7 +180,7 @@ table td {
   font-size: 1em;
   font-weight: 600;
 
-  cursor: pointer;
+  cursor: url('./trey-corn.png'), auto;
 }
 
 .col-button:focus,
@@ -190,5 +190,9 @@ table td {
 
 .col-button.active {
   color: hsla(50, 100%, 80%, 1);
+}
+
+.reset-button {
+  cursor: url('./Trey-disappointed.png'), auto;
 }
 </style>
