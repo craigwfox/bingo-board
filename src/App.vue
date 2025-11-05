@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <h1>Bingo Board</h1>
+    <h1>
+      <img src="/yodel-trey-head.png" alt="" />
+      <span>Trey's Bingo <em>Blue</em>nanza</span>
+    </h1>
     <BingoBoard />
     <WinnerTable />
   </div>
@@ -45,6 +48,24 @@ h4,
 h5,
 h6 {
   font-family: var(--ffcond);
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  color: #16466e;
+  font-size: 5rem;
+
+  img {
+    max-width: 50px;
+  }
+
+  em {
+    color: #2475b7;
+  }
 }
 
 .reset-button {
